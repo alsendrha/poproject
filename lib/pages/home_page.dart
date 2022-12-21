@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:poproject/components/poproject_color.dart';
-import 'package:poproject/pages/add/add_page.dart';
+import 'package:poproject/pages/add_medicine_page/add_medicine_page.dart';
+import 'package:poproject/pages/history/history_page.dart';
 import 'package:poproject/pages/today/today_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   final _pages = [
     const TodayPage(),
-    const HomePage(),
+    const HistoryPage(),
   ];
 
   @override
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
   void _onAddMedicien() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPage()),
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const AddMedicinePage()),
     );
   }
 }

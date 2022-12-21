@@ -8,6 +8,7 @@ class PoprojectThems {
     scaffoldBackgroundColor: Colors.white, // scaffold 는 appbar외의 배경
     splashColor: Colors.white, // 클릭했을때 컬러
     textTheme: _textTheme,
+    appBarTheme: _appBarTheme,
     brightness: Brightness.light,
   );
   static ThemeData get darkTheme => ThemeData(
@@ -19,6 +20,13 @@ class PoprojectThems {
     brightness: Brightness.dark,
   );
 
+  static const AppBarTheme _appBarTheme = AppBarTheme(
+    backgroundColor: Colors.white,
+    iconTheme: IconThemeData(
+      color: PoprojectColors.primaryColor,
+    ),
+    elevation: 0,
+  );
   static const TextTheme _textTheme = TextTheme(
     headline4: TextStyle(
       fontSize: 32,
