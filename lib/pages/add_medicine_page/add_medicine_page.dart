@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/pages/add_medicine_page/add_alarm_page.dart';
-import 'package:poproject/pages/add_medicine_page/components/minwidgets.dart';
+import 'package:poproject/pages/add_medicine_page/components/min_widgets.dart';
 
 class AddMedicinePage extends StatefulWidget {
   const AddMedicinePage({super.key});
@@ -162,6 +162,10 @@ class _MedicineImageButtonState extends State<MedicineImageButton> {
         });
       }
       Navigator.maybePop(context);
+    }).onError((error, stackTrace) {
+      // show setting
+      Navigator.pop(context);
+      showPermissionDenied(context, permission: '카메라 및 갤러리 접근');
     }); 
   }
 }

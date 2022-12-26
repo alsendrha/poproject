@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:poproject/components/poproject_themes.dart';
 import 'package:poproject/pages/home_page.dart';
+import 'package:poproject/service/poproject_notification_service.dart';
 
+final notification = PoprojectNotificationService();
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  notification.initializeTimeZone();
+  notification.initializeNotification();
+  
   runApp(const MyApp());
 }
 

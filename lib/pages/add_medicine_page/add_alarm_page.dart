@@ -1,12 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:poproject/components/poproject_color.dart';
 import 'package:poproject/components/poproject_constants.dart';
-import 'package:poproject/pages/add_medicine_page/components/minwidgets.dart';
+import 'package:poproject/main.dart';
+import 'package:poproject/pages/add_medicine_page/components/min_widgets.dart';
 import 'package:poproject/service/add_medicine_service.dart';
+import 'package:poproject/service/popriject_file_service.dart';
 
 import 'components/add_page_widget.dart';
 
@@ -57,8 +62,25 @@ class AddAlarmPage extends StatelessWidget {
           child: SizedBox(
             height: submitButtomHeight,
             child: ElevatedButton(
-              onPressed:() {
-                
+              onPressed:() async {
+                bool result = false;
+                // 1. add alarm
+                for (var alarm in service.alarms){
+                  result = await notification.addNotifcication(
+                    alarmTimeStr: alarm, 
+                    title: '$alarm 약 먹을 시간이에요!', 
+                    body: '$medicienName 복약했다고 알려주세요!',
+                  );
+                  if(!result) {
+                    showPermissionDenied(context, permission: '알람');
+                  }
+                }
+                // 2. save image (local dir)
+                String? imageFilePath;
+                if(medicineImage != null){
+                  imageFilePath = await saveImageToLocalDirectory(medicineImage!);
+                }
+                // 3. add medicine model (local DB, hive)
               },
               // },
               style: ElevatedButton.styleFrom(
