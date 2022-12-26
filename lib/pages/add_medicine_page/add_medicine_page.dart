@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/pages/add_medicine_page/add_alarm_page.dart';
+import 'package:poproject/pages/add_medicine_page/components/minwidgets.dart';
 
 class AddMedicinePage extends StatefulWidget {
   const AddMedicinePage({super.key});
@@ -173,22 +174,17 @@ class PickImageBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Padding(
-          padding: pagePadding,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-            TextButton(
-              onPressed: onPressedCamera,
-              child: const Text('카메라로 촬영'),
-            ),
-            TextButton(
-              onPressed: onPressedGallery,
-              child: const Text('앨범에서 가져오기'),
-            ),
-          ],),
+    return BottomSheetBody(
+      children: [
+        TextButton(
+          onPressed: onPressedCamera,
+          child: const Text('카메라로 촬영'),
         ),
-      );
+        TextButton(
+          onPressed: onPressedGallery,
+          child: const Text('앨범에서 가져오기'),
+        ),
+      ],
+    );
   }
 }
