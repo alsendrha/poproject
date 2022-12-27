@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:poproject/components/poproject_themes.dart';
 import 'package:poproject/pages/home_page.dart';
+import 'package:poproject/repositories/medicine_repository.dart';
+import 'package:poproject/repositories/poproject_hive.dart';
 import 'package:poproject/service/poproject_notification_service.dart';
 
 final notification = PoprojectNotificationService();
-void main() {
+final hive = PoprojectHive();
+final medicineRepository = MedicineRepository();
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  notification.initializeTimeZone();
-  notification.initializeNotification();
+  await notification.initializeTimeZone();
+  await notification.initializeNotification();
+
+  await hive.initializeHive();
   
   runApp(const MyApp());
 }

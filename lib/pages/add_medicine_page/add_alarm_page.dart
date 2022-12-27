@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:poproject/components/poproject_color.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/main.dart';
+import 'package:poproject/models/medicine.dart';
 import 'package:poproject/pages/add_medicine_page/components/min_widgets.dart';
 import 'package:poproject/service/add_medicine_service.dart';
 import 'package:poproject/service/popriject_file_service.dart';
@@ -67,12 +68,14 @@ class AddAlarmPage extends StatelessWidget {
                 // 1. add alarm
                 for (var alarm in service.alarms){
                   result = await notification.addNotifcication(
+                    medicineId: medicineRepository.newId,
                     alarmTimeStr: alarm, 
                     title: '$alarm 약 먹을 시간이에요!', 
-                    body: '$medicienName 복약했다고 알려주세요!',
+                    body: '$medicienName 복약했다고 알려주세요!', 
                   );
+
                   if(!result) {
-                    showPermissionDenied(context, permission: '알람');
+                    return showPermissionDenied(context, permission: '알람');
                   }
                 }
                 // 2. save image (local dir)
@@ -81,6 +84,12 @@ class AddAlarmPage extends StatelessWidget {
                   imageFilePath = await saveImageToLocalDirectory(medicineImage!);
                 }
                 // 3. add medicine model (local DB, hive)
+                final medicine = Medicine(
+                  id: medicineRepository.newId, name: medicienName, imagePath: imageFilePath, alarms: service.alarms.toList()
+                );
+                medicineRepository.addMedicine(medicine);
+
+                Navigator.popUntil(context, (route) => route.isFirst,);
               },
               // },
               style: ElevatedButton.styleFrom(
