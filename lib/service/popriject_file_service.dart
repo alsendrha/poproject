@@ -4,8 +4,8 @@ import 'package:path_provider/path_provider.dart';
 
 Future<String> saveImageToLocalDirectory(File image) async {
   final documentDirectory = await getApplicationDocumentsDirectory();
-  final folderPath = documentDirectory.path + '/medicien/images';
-  final filePath = folderPath + '/${DateTime.now().millisecondsSinceEpoch}.png';
+  final folderPath = '${documentDirectory.path}/medicine/images';
+  final filePath = '$folderPath/${DateTime.now().millisecondsSinceEpoch}.png';
 
   await Directory(folderPath).create(recursive: true);
 
