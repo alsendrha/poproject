@@ -4,8 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:poproject/components/poproject_color.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/main.dart';
 import 'package:poproject/models/medicine.dart';

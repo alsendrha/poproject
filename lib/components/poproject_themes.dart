@@ -4,7 +4,7 @@ import 'package:poproject/components/poproject_color.dart';
 class PoprojectThems {
   static ThemeData get lightTheme => ThemeData(
     primarySwatch: PoprojectColors.primaryMeterialColor,
-    fontFamily: 'KOTRAHOPETTF',
+    fontFamily: 'GmarketSansTTF',
     scaffoldBackgroundColor: Colors.white, // scaffold 는 appbar외의 배경
     splashColor: Colors.white, // 클릭했을때 컬러
     textTheme: _textTheme,
@@ -13,7 +13,7 @@ class PoprojectThems {
   );
   static ThemeData get darkTheme => ThemeData(
     primarySwatch: PoprojectColors.primaryMeterialColor,
-    fontFamily: 'KOTRAHOPETTF',
+    fontFamily: 'GmarketSansTTF',
     // scaffoldBackgroundColor: Colors.white, // scaffold 는 appbar외의 배경
     splashColor: Colors.white, // 클릭했을때 컬러
     textTheme: _textTheme,
