@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:poproject/components/min_page.route.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/main.dart';
 import 'package:poproject/models/medicine_alarm.dart';
-import 'package:poproject/repositories/medicine_repository.dart';
+import 'package:poproject/pages/bottomsheet/time_setting_bottomsheet.dart';
+import 'package:poproject/pages/today/today_empty_widget.dart';
 
 import '../../models/medicine.dart';
 
@@ -22,14 +24,14 @@ class TodayPage extends StatelessWidget {
         style: Theme.of(context).textTheme.headline4,
         ),
         const SizedBox(height: regulaSpace,),
-        const Divider(height: 1, thickness: 2.0),
+        
         Expanded(
           child: ValueListenableBuilder(
             valueListenable: medicineRepository.medicineBox.listenable(),
             builder: _buildMedicineListView
           ),
         ),
-        const Divider(height: 1, thickness: 2.0),
+        
       ],
     );
   }
@@ -37,6 +39,10 @@ class TodayPage extends StatelessWidget {
   Widget _buildMedicineListView(context,Box<Medicine>box,_) {
     final medicines = box.values.toList();
     final medicineAlarms = <MedicineAlarm>[];
+
+    if(medicines.isEmpty){
+      return const TodayEmpty();
+    }
 
     for (var medicine in medicines) {
       for (var alarm in medicine.alarms) {
@@ -50,15 +56,23 @@ class TodayPage extends StatelessWidget {
       }
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: smallSpace),
-      itemCount: medicineAlarms.length,
-      itemBuilder: (context, index) {
-        return MedicineListTile(medicineAlarm: medicineAlarms[index]);
-      },
-      separatorBuilder: (context, index) {
-        return const Divider(height: regulaSpace,);
-      },
+    return Column(
+      children: [
+        const Divider(height: 1, thickness: 1.0),
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(vertical: smallSpace),
+            itemCount: medicineAlarms.length,
+            itemBuilder: (context, index) {
+              return MedicineListTile(medicineAlarm: medicineAlarms[index]);
+            },
+            separatorBuilder: (context, index) {
+              return const Divider(height: regulaSpace,);
+            },
+          ),
+        ),
+        const Divider(height: 1, thickness: 1.0),
+      ],
     );
   }
 }
@@ -77,7 +91,14 @@ class MedicineListTile extends StatelessWidget {
       children: [
         CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {},
+          onPressed: medicineAlarm.imagePath == null ? null : () {
+            Navigator.push(
+              context, 
+              FadePageRoute(
+                page: ImageDetailPage(medicineAlarm: medicineAlarm)
+              )
+            );
+          },
           child:CircleAvatar(
             radius: 40,
             foregroundImage: medicineAlarm.imagePath == null ? null : FileImage(File(medicineAlarm.imagePath!)),
@@ -103,7 +124,14 @@ class MedicineListTile extends StatelessWidget {
                   Text('|', style: textStyle),
                   TileActionButton(
                     onTap: () {
-                    
+                      showModalBottomSheet(
+                        context: context, 
+                        builder:(context) => TimeSettingBottomSheet(
+                          initialTime: medicineAlarm.alarmTime
+                        ),
+                      ).then((value) {
+                        print(value);
+                      });
                     },
                     title: '아까',  
                   ),
@@ -120,6 +148,29 @@ class MedicineListTile extends StatelessWidget {
           child: const Icon(CupertinoIcons.ellipsis_vertical),
         ),
       ],
+    );
+  }
+}
+
+class ImageDetailPage extends StatelessWidget {
+  const ImageDetailPage({
+    Key? key,
+    required this.medicineAlarm,
+  }) : super(key: key);
+
+  final MedicineAlarm medicineAlarm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: const CloseButton(),
+      ),
+      body: Center(
+        child: Image.file(
+          File(medicineAlarm.imagePath!)
+        ),
+      ),
     );
   }
 }

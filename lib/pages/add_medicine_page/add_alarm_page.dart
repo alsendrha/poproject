@@ -5,12 +5,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:poproject/components/poproject_color.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/main.dart';
 import 'package:poproject/models/medicine.dart';
 import 'package:poproject/pages/add_medicine_page/components/min_widgets.dart';
+import 'package:poproject/pages/bottomsheet/time_setting_bottomsheet.dart';
 import 'package:poproject/service/add_medicine_service.dart';
 import 'package:poproject/service/popriject_file_service.dart';
 
@@ -166,12 +166,20 @@ class AlarmBox extends StatelessWidget {
               showModalBottomSheet(
                 context: context, 
                 builder: (context){
-                  return TimePickerBottomSheet(
+                  return TimeSettingBottomSheet(
                     initialTime: time,
-                    service: service,
+                    // service: service,
                   );
                 },
-              );
+              ).then((value) {
+                if(value == null || value is! DateTime) {
+                  return;
+                }
+                service.setAlarm(
+                  prevTime: time, 
+                  setTime: value
+                );
+              });
             }, 
             child: Text(time),
           ),
@@ -181,69 +189,8 @@ class AlarmBox extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
-class TimePickerBottomSheet extends StatelessWidget {
-    TimePickerBottomSheet({
-    Key? key, required this.initialTime, required this.service,
-  }) : super(key: key);
 
-  final String initialTime;
-  final AddMedicineService service;
-  DateTime? _setDateTime;
 
-  @override
-  Widget build(BuildContext context) {
-    final initialDateTime = DateFormat('HH:mm').parse(initialTime);
-    return BottomSheetBody(
-      children:[
-        SizedBox(
-          height: 200,
-          child: CupertinoDatePicker(
-            onDateTimeChanged: (dateTime){
-              _setDateTime = dateTime;
-            },
-            mode: CupertinoDatePickerMode.time,
-            initialDateTime: initialDateTime,
-          ),
-        ),
-        const SizedBox(height: largeSpace,),
-        Row(children: [
-          Expanded(
-            child: SizedBox(
-              height: submitButtomHeight,
-              child: ElevatedButton(onPressed: () {
-                Navigator.pop(context);
-              }, 
-              style: ElevatedButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.subtitle1,
-                backgroundColor : Colors.white,
-                foregroundColor : PoprojectColors.primaryColor,
-              ), 
-              child: const Text('취소')),
-            ),
-          ),
-          const SizedBox(width: smallSpace,),
-          Expanded(
-            child: SizedBox(
-              height: submitButtomHeight,
-              child: ElevatedButton(onPressed: () {
-                service.setAlarm(
-                  prevTime: initialTime, 
-                  setTime: _setDateTime ?? initialDateTime
-                );
-                Navigator.pop(context);
-              }, 
-              style: ElevatedButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.subtitle1,
-              ), 
-              child: const Text('선택')),
-            ),
-          ),
-        ],)
-      ]
-    );
-  }
-}
 
 class AddAlarmButton extends StatelessWidget {
   const AddAlarmButton({
