@@ -8,11 +8,13 @@ import '../add_medicine_page/components/min_widgets.dart';
 
 class TimeSettingBottomSheet extends StatelessWidget {
     const TimeSettingBottomSheet({
-    Key? key, required this.initialTime, 
+    Key? key, required this.initialTime, this.submitTitle = '선택', this.bottomWedget, 
     // required this.service,
   }) : super(key: key);
 
   final String initialTime;
+  final Widget? bottomWedget;
+  final String submitTitle;
   // final AddMedicineService service;
 
   @override
@@ -34,7 +36,9 @@ class TimeSettingBottomSheet extends StatelessWidget {
             initialDateTime: initialDateTime,
           ),
         ),
-        const SizedBox(height: largeSpace,),
+        const SizedBox(height: smallSpace,),
+        if(bottomWedget != null) bottomWedget!,
+        const SizedBox(height: smallSpace,),
         Row(children: [
           Expanded(
             child: SizedBox(
@@ -64,7 +68,7 @@ class TimeSettingBottomSheet extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.subtitle1,
               ), 
-              child: const Text('선택')),
+              child: Text(submitTitle)),
             ),
           ),
         ],)

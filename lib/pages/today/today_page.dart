@@ -103,7 +103,7 @@ class TodayPage extends StatelessWidget {
         }
 
         return AfterTakeTile(
-          medicineAlarm: medicineAlarm,
+          medicineAlarm: medicineAlarm, history: todayTakeHistory,
         );
       }
     );

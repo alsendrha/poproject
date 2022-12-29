@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:poproject/pages/today/image_detail_page.dart';
 
 import '../../components/min_page.route.dart';
@@ -46,31 +47,19 @@ class BeforeTakeTile extends StatelessWidget {
           Text('${medicineAlarm.name},', style: textStyle,),
           TileActionButton(
             onTap: () {
-            
+              historyRepository.addHistory(
+                MedicineHistory(
+                  medicineId: medicineAlarm.id, 
+                  alarmTime: medicineAlarm.alarmTime, 
+                  takeTime: DateTime.now(),
+                )
+                );
             },
             title: '지금',  
           ),
           Text('|', style: textStyle),
           TileActionButton(
-            onTap: () {
-              showModalBottomSheet(
-                context: context, 
-                builder:(context) => TimeSettingBottomSheet(
-                  initialTime: medicineAlarm.alarmTime
-                ),
-              ).then((takeDateTime) {
-                if(takeDateTime == null || takeDateTime is! DateTime){
-                  return;
-                }
-                historyRepository.addHistory(
-                  MedicineHistory(
-                    medicineId: medicineAlarm.id, 
-                    alarmTime: medicineAlarm.alarmTime, 
-                    takeTime: takeDateTime,
-                  )
-                );
-              });
-            },
+            onTap:() => _onPreviousTake(context),
             title: '아까',  
           ),
           Text('먹었어요', style: textStyle),
@@ -78,13 +67,35 @@ class BeforeTakeTile extends StatelessWidget {
       )
     ];
   }
+
+  void _onPreviousTake(BuildContext context) {
+    showModalBottomSheet(
+      context: context, 
+      builder:(context) => TimeSettingBottomSheet(
+        initialTime: medicineAlarm.alarmTime
+      ),
+    ).then((takeDateTime) {
+      if(takeDateTime == null || takeDateTime is! DateTime){
+        return;
+      }
+      historyRepository.addHistory(
+        MedicineHistory(
+          medicineId: medicineAlarm.id, 
+          alarmTime: medicineAlarm.alarmTime, 
+          takeTime: takeDateTime,
+        )
+      );
+    });
+  }
 }
+
 class AfterTakeTile extends StatelessWidget {
   const AfterTakeTile({
-    Key? key, required this.medicineAlarm,
+    Key? key, required this.medicineAlarm, required this.history,
   }) : super(key: key);
 
   final MedicineAlarm medicineAlarm;
+  final MedicineHistory history;
 
   @override
   Widget build(BuildContext context) {
@@ -117,13 +128,17 @@ class AfterTakeTile extends StatelessWidget {
   }
 
   List<Widget> _buildTileBody(TextStyle? textStyle, BuildContext context) {
+    
     return [
       Text.rich(
         TextSpan(
           text: '✅${medicineAlarm.alarmTime} ->',
           style: textStyle,
           children: [
-            TextSpan(text: '20: 19', style: textStyle?.copyWith(fontWeight: FontWeight.w500)),
+            TextSpan(
+              text: takeTimeStr,
+              style: textStyle?.copyWith(fontWeight: FontWeight.w500),
+            ),
           ]
         ),
       ),
@@ -134,15 +149,43 @@ class AfterTakeTile extends StatelessWidget {
         children: [
           Text('${medicineAlarm.name},', style: textStyle,),
           TileActionButton(
-            onTap: () {
-            
-            },
-            title: '20시 19분에',  
+            onTap: () => _onTap(context),
+            title: DateFormat('HH시 mm분에').format(history.takeTime), //'20시 19분에',  
           ),
           Text('먹었어요', style: textStyle),
         ],
       )
     ];
+  }
+
+  String get takeTimeStr => DateFormat('HH:mm').format(history.takeTime); 
+
+  void _onTap(BuildContext context) {
+    showModalBottomSheet(
+      context: context, 
+      builder:(context) => TimeSettingBottomSheet(
+        initialTime: takeTimeStr,
+        submitTitle: '수정',
+        bottomWedget: TextButton(onPressed: () {
+          historyRepository.deleteHistory(history.key);
+          Navigator.pop(context);
+        },
+        child: Text('복약 시간을 지우고 싶어요.', 
+        style: Theme.of(context).textTheme.bodyText2,)),
+      ),
+    ).then((takeDateTime) {
+      if(takeDateTime == null || takeDateTime is! DateTime){
+        return;
+      }
+      historyRepository.updateHistory(
+        key: history.key,
+        history:MedicineHistory(
+          medicineId: medicineAlarm.id, 
+          alarmTime: medicineAlarm.alarmTime, 
+          takeTime: takeDateTime,
+        )
+      );
+    });
   }
 }
 
