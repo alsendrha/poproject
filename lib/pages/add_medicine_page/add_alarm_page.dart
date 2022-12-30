@@ -14,14 +14,17 @@ import 'package:poproject/service/popriject_file_service.dart';
 
 import 'components/add_page_widget.dart';
 
+// ignore: must_be_immutable
 class AddAlarmPage extends StatelessWidget {
-  AddAlarmPage({super.key, required this.medicineImage, required this.medicienName});
+  AddAlarmPage({super.key, required this.medicineImage, required this.medicienName, required this.updateMedicineId}) {
+    service = AddMedicineService(updateMedicineId);
+  }
 
   final File? medicineImage;
   final String medicienName;
-
+  final int updateMedicineId; 
  
-  final service = AddMedicineService();
+  late AddMedicineService service;
 
   @override
   Widget build(BuildContext context) {
