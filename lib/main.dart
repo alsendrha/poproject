@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:poproject/components/poproject_themes.dart';
 import 'package:poproject/pages/home_page.dart';
 import 'package:poproject/repositories/medicine_history_repository.dart';
@@ -12,6 +13,8 @@ final medicineRepository = MedicineRepository();
 final historyRepository = MedicineHistoryRepository();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting();
 
   await notification.initializeTimeZone();
   await notification.initializeNotification();

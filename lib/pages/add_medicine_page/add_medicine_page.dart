@@ -9,6 +9,8 @@ import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/pages/add_medicine_page/add_alarm_page.dart';
 import 'package:poproject/pages/add_medicine_page/components/min_widgets.dart';
 
+import '../bottomsheet/pick_image_bottomsheet.dart';
+
 class AddMedicinePage extends StatefulWidget {
   const AddMedicinePage({super.key});
 
@@ -47,7 +49,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                  ),
                  const SizedBox(height: largeSpace,),
                   Center(
-                    child: MedicineImageButton(
+                    child: _MedicineImageButton(
                       changeImageFile: (File? value) {
                         _medicineImage = value;
                       },
@@ -110,16 +112,16 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   }
 }
 
-class MedicineImageButton extends StatefulWidget {
-  const MedicineImageButton({super.key, required this.changeImageFile});
+class _MedicineImageButton extends StatefulWidget {
+  const _MedicineImageButton({super.key, required this.changeImageFile});
 
   final ValueChanged<File?> changeImageFile;
 
   @override
-  State<MedicineImageButton> createState() => _MedicineImageButtonState();
+  State<_MedicineImageButton> createState() => _MedicineImageButtonState();
 }
 
-class _MedicineImageButtonState extends State<MedicineImageButton> {
+class _MedicineImageButtonState extends State<_MedicineImageButton> {
   File? _pickedImage;
 
   @override
@@ -167,28 +169,5 @@ class _MedicineImageButtonState extends State<MedicineImageButton> {
       Navigator.pop(context);
       showPermissionDenied(context, permission: '카메라 및 갤러리 접근');
     }); 
-  }
-}
-
-class PickImageBottomSheet extends StatelessWidget {
-  const PickImageBottomSheet({super.key, required this.onPressedCamera, required this.onPressedGallery});
-
-  final VoidCallback onPressedCamera;
-  final VoidCallback onPressedGallery;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomSheetBody(
-      children: [
-        TextButton(
-          onPressed: onPressedCamera,
-          child: const Text('카메라로 촬영'),
-        ),
-        TextButton(
-          onPressed: onPressedGallery,
-          child: const Text('앨범에서 가져오기'),
-        ),
-      ],
-    );
   }
 }

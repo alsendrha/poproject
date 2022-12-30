@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:poproject/pages/bottomsheet/more_action_bottomsheet.dart';
 import 'package:poproject/pages/today/image_detail_page.dart';
 
 import '../../components/min_page.route.dart';
@@ -24,7 +25,7 @@ class BeforeTakeTile extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.bodyText2;
     return Row(
       children: [
-        _MedicineImageButton(medicineAlarm: medicineAlarm),
+        MedicineImageButton(imagePath: medicineAlarm.imagePath),
         const SizedBox(width: smallSpace),
         Expanded(
           child: Column(
@@ -49,9 +50,12 @@ class BeforeTakeTile extends StatelessWidget {
             onTap: () {
               historyRepository.addHistory(
                 MedicineHistory(
+                  name: medicineAlarm.name,
+                  imagePath: medicineAlarm.imagePath,
                   medicineId: medicineAlarm.id, 
+                  medicineKey: medicineAlarm.key,
                   alarmTime: medicineAlarm.alarmTime, 
-                  takeTime: DateTime.now(),
+                  takeTime: DateTime.now(), 
                 )
                 );
             },
@@ -80,7 +84,10 @@ class BeforeTakeTile extends StatelessWidget {
       }
       historyRepository.addHistory(
         MedicineHistory(
-          medicineId: medicineAlarm.id, 
+          name: medicineAlarm.name,
+          imagePath: medicineAlarm.imagePath,
+          medicineId: medicineAlarm.id,
+          medicineKey: medicineAlarm.key,
           alarmTime: medicineAlarm.alarmTime, 
           takeTime: takeDateTime,
         )
@@ -104,7 +111,7 @@ class AfterTakeTile extends StatelessWidget {
       children: [
         Stack(
           children: [
-            _MedicineImageButton(medicineAlarm: medicineAlarm),
+            MedicineImageButton(imagePath: medicineAlarm.imagePath),
             CircleAvatar(
               radius: 40,
               backgroundColor: Colors.green.withOpacity(0.7),
@@ -180,7 +187,10 @@ class AfterTakeTile extends StatelessWidget {
       historyRepository.updateHistory(
         key: history.key,
         history:MedicineHistory(
-          medicineId: medicineAlarm.id, 
+          name: medicineAlarm.name,
+          imagePath: medicineAlarm.imagePath,
+          medicineId: medicineAlarm.id,
+          medicineKey: medicineAlarm.key, 
           alarmTime: medicineAlarm.alarmTime, 
           takeTime: takeDateTime,
         )
@@ -201,36 +211,44 @@ class _MoreButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: () {
-        medicineRepository.deleteMedicine(medicineAlarm.key);
+        // medicineRepository.deleteMedicine(medicineAlarm.key);
+        showModalBottomSheet(
+          context: context, 
+          builder: (context) => MoreActionBottomSheet(
+            onPressedModify: () {}, 
+            onPressedDeleteOnlyMedicine: () {},
+            onPressedDeleteAll: () {},
+          ),
+        );
       },
       child: const Icon(CupertinoIcons.ellipsis_vertical),
     );
   }
 }
 
-class _MedicineImageButton extends StatelessWidget {
-  const _MedicineImageButton({
+class MedicineImageButton extends StatelessWidget {
+  const MedicineImageButton({
     Key? key,
-    required this.medicineAlarm,
+    required this.imagePath,
   }) : super(key: key);
 
-  final MedicineAlarm medicineAlarm;
+  final String? imagePath;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
       padding: EdgeInsets.zero,
-      onPressed: medicineAlarm.imagePath == null ? null : () {
+      onPressed: imagePath == null ? null : () {
         Navigator.push(
           context, 
           FadePageRoute(
-            page: ImageDetailPage(medicineAlarm: medicineAlarm)
+            page: ImageDetailPage(imagePath: imagePath!)
           )
         );
       },
       child:CircleAvatar(
         radius: 40,
-        foregroundImage: medicineAlarm.imagePath == null ? null : FileImage(File(medicineAlarm.imagePath!)),
+        foregroundImage: imagePath == null ? null : FileImage(File(imagePath!)),
       ),
     );
   }
