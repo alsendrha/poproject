@@ -1,4 +1,4 @@
-package com.example.poproject
+package com.minyoung.poproject
 
 import io.flutter.embedding.android.FlutterActivity
 

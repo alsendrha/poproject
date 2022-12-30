@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.poproject">
+    package="com.minyoung.poproject">
    <application
         android:label="약먹장"
         android:name="${applicationName}"
