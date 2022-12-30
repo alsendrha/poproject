@@ -38,14 +38,14 @@ class TileActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonTextStyle = Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.w500);
+    // final buttonTextStyle = Theme.of(context).textTheme.bodyText2?.copyWith(fontWeight: FontWeight.w500);
     return GestureDetector(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
           title, 
-          style: buttonTextStyle,
+          style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w500),
         ),
       ),
     );

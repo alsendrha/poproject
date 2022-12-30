@@ -25,9 +25,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: pagePadding,
-        child: SafeArea(child: _pages[_currentIndex]),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            opacity: 0.2,
+            fit: BoxFit.fitWidth,
+            image: AssetImage('assets/images/main_background2.png'))
+        ),
+        child: Padding(
+          padding: pagePadding,
+          child: SafeArea(child: _pages[_currentIndex]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onAddMedicien,

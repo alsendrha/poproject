@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:poproject/components/poproject_constants.dart';
 import 'package:poproject/models/medicine.dart';
+import 'package:poproject/pages/today/history_empty_widget.dart';
 import 'package:poproject/pages/today/today_take_tile.dart';
 
 import '../../main.dart';
@@ -31,6 +32,9 @@ class HistoryPage extends StatelessWidget {
 
   Widget _buildListView(context,Box<MedicineHistory> historyBox, _) {
    final histories = historyBox.values.toList().reversed.toList();
+   if(histories.isEmpty){
+    return const HistoryEmpty();
+   }
     return ListView.builder(
       itemCount: histories.length,
       itemBuilder: (context, index) {
